@@ -1,0 +1,30 @@
+name: Unit Tests Execution
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  testing:
+    strategy:
+      matrix:
+        platform: [ubuntu-22.04, windows-2022]
+        python: ['3.10']
+    runs-on: ${{ matrix.platform }}
+    
+    steps:
+      - name: Get source code
+        uses: actions/checkout@v3
+      
+      - name: Configure Python ${{ matrix.python }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+      
+      - name: Verify Python installation
+        run: python --version
+      
+      - name: Execute test suite
+        run: python -m unittest discover tests -v
